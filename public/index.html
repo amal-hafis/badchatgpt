@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Oxygen Chatbot</title>
+	<style>
+*{
+	margin: 0;
+	padding: 0;
+	font-family: Calibri;
+}
+
+body
+{
+	background-image: url("Background.jpg");
+	background-size: cover;
+	background-repeat: no-repeat;
+	background-attachment: fixed;
+	background-position: center;
+}
+
+#ResponseText
+{
+	color: #2c2c2c;
+	text-align: center;
+	cursor: pointer;
+}
+
+#InputBox
+{
+	background-color: #2c2c2c;
+	color: #f9f9f9;
+	text-align: center;
+	font-size: 27px;
+	border: none;
+	border-radius: 50px;
+	outline: none;
+	min-width: 720px;
+	max-width: max-content;
+	height: 50px;
+	
+}
+.container{
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	height: 100vh;
+	gap: 1.2rem;
+}
+
+.voice{
+	background-color: #2c2c2c;
+	color: blue;
+	text-align: center;
+	font-size: 27px;
+	border: none;
+	border-radius: 50px;
+	height: auto;
+	padding: 2rem;
+}
+	</style>
+</head>
+<body>
+	<h1 id="ResponseText">Hi! I'm Oxygen!</h1>
+	<div class="container">
+		<input id="InputBox" type="text" placeholder="Type to Talk..." onkeydown="IsEnter()" autofocus>
+	<button class="voice">voice</button>
+	</div>
+	
+	<script >
+		function IsEnter()
+{
+	var TextBox_val = document.getElementById("InputBox").value; 
+	if (TextBox_val != "")
+	{
+		if (event.keyCode == 13)
+			main();
+			getResponse();
+	}
+}
+function main()
+{	var TextBox_val = document.getElementById("InputBox").value; 
+	var ResponseText_val = document.getElementById("ResponseText");
+	var FormatInput = TextBox_val.toLowerCase().trim(); 
+	if (FormatInput.includes("hi") || FormatInput.includes("hello")){
+		ResponseText_val.innerHTML = "Hello!";
+	}
+	else if (FormatInput.includes("how are you"))
+	{ResponseText_val.innerHTML = "I'm fine! Thanks for asking!";}
+	else if (FormatInput.includes("open google"))
+	{	ResponseText_val.innerHTML = "Opening Google";
+		window.open("https://www.google.com", "_blank");
+	}else if (FormatInput.includes("open youtube"))
+	{	ResponseText_val.innerHTML = "Opening YouTube";
+		window.open("https://www.youtube.com", "_blank");
+	}else if (FormatInput.includes("open onestate"))
+	{ResponseText_val.innerHTML = "Opening Onestate Coding on YouTube";
+		window.open("https://www.youtube.com/channel/UCrphqZNc_r-KsOTeTKH5hwA", "_blank");
+	}else if (FormatInput.includes("open light-lens"))
+	{	ResponseText_val.innerHTML = "Opening Light-Lens on Github";
+		window.open("https://github.com/Light-Lens", "_blank");
+	}else {
+		getResponse()
+	}}
+	
+	const TextBox = document.getElementById("InputBox")
+	document.getElementsByClassName("voice").addEventListener('click',function(){
+    var speech = true;
+    window.SpeechRecognition = window.webkitSpeechRecognition;
+    const recognition = new SpeechRecognition();
+    recognition.interimResults = true;
+    recognition.addEventListener('result', e => {
+        const transcript = Array.from(e.results)
+            .map(result => result[0])
+            .map(result => result.transcript)
+            .join('')
+			var inputt = document.getElementById("InputBox");
+			inputt.autofocus = true
+			inputt.value = transcript
+		    });
+	if (speech == true) {
+        recognition.start();
+		
+		
+    }
+})
+async function getResponse() {                  
+	var TextBox_val = document.getElementById("InputBox").value;         
+	var ResponseText_val = document.getElementById("ResponseText"); 
+	let res = await fetch('http://localhost:5000/chat', 
+  {
+    method: 'POST',
+    headers: {
+      "Content-Type": 'application/json'                
+    },
+    body: JSON.stringify({
+      question: TextBox_val          
+    })
+  }
+)
+const data = await res.json()   
+	if(data.message) {
+		ResponseText_val.innerHTML = data.message
+	  }
+  }
+	</script>
+</body>
+</html>
