@@ -2,10 +2,11 @@
   "name": "badchatgpt",
   "version": "1.0.0",
   "description": "Oxygen is a very basic Chabot written in Plane JavaScript for my [YouTube video](https://youtu.be/AuThE5bxpDE).",
-  "type":"module",
+ "type": "module",
+  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon ."
+    "start": "node server.mjs"
   },
   "keywords": [],
   "author": "",
